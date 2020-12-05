@@ -24,13 +24,13 @@ public User getUsers(String type, Integer... ids) {...}
 <br>3） 【推薦】所有的局部變數使用基本資料類型。
 <br><span style="color:orange">說明</span>：POJO類屬性沒有初值是提醒使用者在需要使用時，必須自己顯式地進行賦值，任何NPE問題，或者入庫檢查，都由使用者來保證。
 <br><span style="color:green">正例</span>：資料庫的查詢結果可能是null，因爲自動拆箱，用基本資料類型接收有NPE風險。
-<br><span style="color:red">反例</span>：比如顯示成交總額漲跌情況，即正負x%，x爲基本資料類型，調用的RPC服務，調用不成功時，返回的是預設值，頁面顯示爲0%，這是不合理的，應該顯示成中劃線。所以包裝資料類型的null值，能夠表示額外的信息，如：遠端調用失敗，異常退出。 
+<br><span style="color:red">反例</span>：比如顯示成交總額漲跌情況，即正負x%，x爲基本資料類型，調用的RPC服務，調用不成功時，返回的是預設值，頁面顯示爲0%，這是不合理的，應該顯示成中劃線。所以包裝資料類型的null值，能夠表示額外的訊息，如：遠端調用失敗，異常退出。 
 9. 【強制】定義DO/DTO/VO等POJO類時，不要設定任何屬性**預設值**。
-<br><span style="color:red">反例</span>：POJO類的gmtCreate預設值爲new Date();但是這個屬性在資料提取時並沒有置入具體值，在更新其它字段時又附帶更新了此字段，導致創建時間被修改成當前時間。 
-10. 【強制】序列化類新增屬性時，請不要修改serialVersionUID字段，避免反序列失敗；如果完全不兼容升級，避免反序列化混亂，那麼請修改serialVersionUID值。 
+<br><span style="color:red">反例</span>：POJO類的gmtCreate預設值爲new Date();但是這個屬性在資料提取時並沒有置入具體值，在更新其它欄位時又附帶更新了此欄位，導致創建時間被修改成當前時間。 
+10. 【強制】序列化類新增屬性時，請不要修改serialVersionUID欄位，避免反序列失敗；如果完全不兼容升級，避免反序列化混亂，那麼請修改serialVersionUID值。 
 <br><span style="color:orange">說明</span>：注意serialVersionUID不一致會拋出序列化運行時異常。 
 11. 【強制】建構方法裏面禁止加入任何業務邏輯，如果有初始化邏輯，請放在init方法中。 
-12. 【強制】POJO類必須寫function toString() { [native code] }方法。使用IDE中的工具：source> generate function toString() { [native code] }時，如果繼承了另一個POJO類，注意在前面加一下super.function toString() { [native code] }。 <br><span style="color:orange">說明</span>：在方法執行拋出異常時，可以直接調用POJO的function toString() { [native code] }()方法打印其屬性值，便於排查問題。 
+12. 【強制】POJO類必須寫function toString() { [native code] }方法。使用IDE中的工具：source> generate function toString() { [native code] }時，如果繼承了另一個POJO類，注意在前面加一下super.function toString() { [native code] }。 <br><span style="color:orange">說明</span>：在方法執行拋出異常時，可以直接調用POJO的function toString() { [native code] }()方法輸出其屬性值，便於排查問題。 
 13. 【推薦】使用索引訪問用String的split方法得到的陣列時，需做最後一個分隔符後有無內容的檢查，否則會有拋IndexOutOfBoundsException的風險。 
 <br><span style="color:orange">說明</span>：
 ```
@@ -40,7 +40,7 @@ String[] ary = str.split(",");
 ```
 14. 【推薦】當一個類有多個建構方法，或者多個同名方法，這些方法應該按順序放置在一起，便於閱讀，此條規則優先於第15條規則。 
 15. 【推薦】 類內方法定義的順序依次是：公有方法或保護方法 > 私有方法 > getter/setter方法。
-<br><span style="color:orange">說明</span>：公有方法是類的調用者和維護者最關心的方法，首屏展示最好；保護方法雖然只是子類關心，也可能是“模板設計模式”下的核心方法；而私有方法外部一般不需要特別關心，是一個黑盒實現；因爲承載的信息價值較低，所有Service和DAO的getter/setter方法放在類體最後。 
+<br><span style="color:orange">說明</span>：公有方法是類的調用者和維護者最關心的方法，首屏展示最好；保護方法雖然只是子類關心，也可能是“模板設計模式”下的核心方法；而私有方法外部一般不需要特別關心，是一個黑盒實現；因爲承載的訊息價值較低，所有Service和DAO的getter/setter方法放在類體最後。 
 16. 【推薦】setter方法中，參數名稱與類成員變數名稱一致，this.成員名 = 參數名。在getter/setter方法中，不要增加業務邏輯，增加排查問題的難度。
 <br><span style="color:red">反例</span>：
 ```
@@ -53,7 +53,7 @@ String[] ary = str.split(",");
   }
 ```
 17. 【推薦】迴圈內，字符串的連接方式，使用StringBuilder的append方法進行擴展。
-<br><span style="color:orange">說明</span>：反編譯出的字節碼文件顯示每次循環都會new出一個StringBuilder物件，然後進行append操作，最後通過function toString() { [native code] }方法返回String物件，造成內存資源浪費。  <br><span style="color:red">反例</span>：
+<br><span style="color:orange">說明</span>：反編譯出的字節碼文件顯示每次循環都會new出一個StringBuilder物件，然後進行append操作，最後通過function toString() { [native code] }方法返回String物件，造成記憶體資源浪費。  <br><span style="color:red">反例</span>：
 ```
   String str = "start";
   for (int i = 0; i < 100; i++) {
