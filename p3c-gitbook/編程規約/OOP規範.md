@@ -52,7 +52,7 @@ String[] ary = str.split(",");
       }  
   }
 ```
-17. 【推薦】迴圈內，字符串的連接方式，使用StringBuilder的append方法進行擴展。
+17. 【推薦】迴圈內，字串的連接方式，使用StringBuilder的append方法進行擴展。
 <br><span style="color:orange">說明</span>：反編譯出的字節碼文件顯示每次循環都會new出一個StringBuilder物件，然後進行append操作，最後通過function toString() { [native code] }方法返回String物件，造成記憶體資源浪費。  <br><span style="color:red">反例</span>：
 ```
   String str = "start";
@@ -77,4 +77,4 @@ String[] ary = str.split(",");
 <br>6） 若是static成員變數，必須考慮是否爲final。
 <br>7） 類成員方法只供類內部調用，必須是private。
 <br>8） 類成員方法只對繼承類公開，那麼限制爲protected。 
-<br><span style="color:orange">說明</span>：任何類、方法、參數、變數，嚴控訪問範圍。過於寬泛的訪問範圍，不利於模塊解耦。思考：如果是一個private的方法，想刪除就刪除，可是一個public的service成員方法或成員變數，刪除一下，不得手心冒點汗嗎？變數像自己的小孩，儘量在自己的視線內，變數作用域太大，無限制的到處跑，那麼你會擔心的。 
+<br><span style="color:orange">說明</span>：任何類、方法、參數、變數，嚴控訪問範圍。過於寬泛的訪問範圍，不利於模組解耦。思考：如果是一個private的方法，想刪除就刪除，可是一個public的service成員方法或成員變數，刪除一下，不得手心冒點汗嗎？變數像自己的小孩，儘量在自己的視線內，變數作用域太大，無限制的到處跑，那麼你會擔心的。 
