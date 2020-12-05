@@ -1,22 +1,22 @@
 ## (四) ORM映射
-1. 【强制】在表查询中，一律不要使用 * 作为查询的字段列表，需要哪些字段必须明确写明。 
-<br><span style="color:orange">说明</span>：1）增加查询分析器解析成本。2）增减字段容易与resultMap配置不一致。 
-2. 【强制】POJO类的布尔属性不能加is，而数据库字段必须加is_，要求在resultMap中进行字段与属性之间的映射。 
-<br><span style="color:orange">说明</span>：参见定义POJO类以及数据库字段定义规定，在<resultMap>中增加映射，是必须的。在MyBatis Generator生成的代码中，需要进行对应的修改。
-3. 【强制】不要用resultClass当返回参数，即使所有类属性名与数据库字段一一对应，也需要定义；反过来，每一个表也必然有一个与之对应。 
-<br><span style="color:orange">说明</span>：配置映射关系，使字段与DO类解耦，方便维护。 
-4. 【强制】sql.xml配置参数使用：#{}，#param# 不要使用${} 此种方式容易出现SQL注入。 
-5. 【强制】iBATIS自带的queryForList(String statementName,int start,int size)不推荐使用。
-<br><span style="color:orange">说明</span>：其实现方式是在数据库取到statementName对应的SQL语句的所有记录，再通过subList取start,size的子集合。 
+1. 【強制】在表查詢中，一律不要使用 * 作爲查詢的字段列表，需要哪些字段必須明確寫明。 
+<br><span style="color:orange">說明</span>：1）增加查詢分析器解析成本。2）增減字段容易與resultMap配置不一致。 
+2. 【強制】POJO類的布爾屬性不能加is，而數據庫字段必須加is_，要求在resultMap中進行字段與屬性之間的映射。 
+<br><span style="color:orange">說明</span>：參見定義POJO類以及數據庫字段定義規定，在<resultMap>中增加映射，是必須的。在MyBatis Generator生成的代碼中，需要進行對應的修改。
+3. 【強制】不要用resultClass當返回參數，即使所有類屬性名與數據庫字段一一對應，也需要定義；反過來，每一個表也必然有一個與之對應。 
+<br><span style="color:orange">說明</span>：配置映射關係，使字段與DO類解耦，方便維護。 
+4. 【強制】sql.xml配置參數使用：#{}，#param# 不要使用${} 此種方式容易出現SQL注入。 
+5. 【強制】iBATIS自帶的queryForList(String statementName,int start,int size)不推薦使用。
+<br><span style="color:orange">說明</span>：其實現方式是在數據庫取到statementName對應的SQL語句的所有記錄，再通過subList取start,size的子集合。 
 <br><span style="color:green">正例</span>：
         
         Map<String, Object> map = new HashMap<String, Object>();    
         map.put("start", start);    
         map.put("size", size);
 
-6. 【强制】不允许直接拿HashMap与Hashtable作为查询结果集的输出。 
-<br><span style="color:orange">说明</span>：resultClass=”Hashtable”，会置入字段名和属性值，但是值的类型不可控。
-7. 【强制】更新数据表记录时，必须同时更新记录对应的gmt_modified字段值为当前时间。
-8. 【推荐】不要写一个大而全的数据更新接口。传入为POJO类，不管是不是自己的目标更新字段，都进行update table set c1=value1,c2=value2,c3=value3; 这是不对的。执行SQL时，不要更新无改动的字段，一是易出错；二是效率低；三是增加binlog存储。 
-9. 【参考】`@Transactional`事务不要滥用。事务会影响数据库的QPS，另外使用事务的地方需要考虑各方面的回滚方案，包括缓存回滚、搜索引擎回滚、消息补偿、统计修正等。 
-10. 【参考】`<isEqual>`中的compareValue是与属性值对比的常量，一般是数字，表示相等时带上此条件；`<isNotEmpty>`表示不为空且不为null时执行；`<isNotNull>`表示不为null值时执行。  
+6. 【強制】不允許直接拿HashMap與Hashtable作爲查詢結果集的輸出。 
+<br><span style="color:orange">說明</span>：resultClass=”Hashtable”，會置入字段名和屬性值，但是值的類型不可控。
+7. 【強制】更新數據表記錄時，必須同時更新記錄對應的gmt_modified字段值爲當前時間。
+8. 【推薦】不要寫一個大而全的數據更新接口。傳入爲POJO類，不管是不是自己的目標更新字段，都進行update table set c1=value1,c2=value2,c3=value3; 這是不對的。執行SQL時，不要更新無改動的字段，一是易出錯；二是效率低；三是增加binlog存儲。 
+9. 【參考】`@Transactional`事務不要濫用。事務會影響數據庫的QPS，另外使用事務的地方需要考慮各方面的回滾方案，包括緩存回滾、搜索引擎回滾、消息補償、統計修正等。 
+10. 【參考】`<isEqual>`中的compareValue是與屬性值對比的常量，一般是數字，表示相等時帶上此條件；`<isNotEmpty>`表示不爲空且不爲null時執行；`<isNotNull>`表示不爲null值時執行。  
