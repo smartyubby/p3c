@@ -9,9 +9,9 @@
 ```
 public User getUsers(String type, Integer... ids) {...} 
 ```
-4. 【強制】外部正在調用或者二方庫依賴的接口，不允許修改方法簽名，避免對接口調用方產生影響。接口過時必須加`@Deprecated`註解，並清晰地說明採用的新接口或者新服務是什麼。 
+4. 【強制】外部正在調用或者二方庫依賴的介面，不允許修改方法簽名，避免對介面調用方產生影響。介面過時必須加`@Deprecated`註解，並清晰地說明採用的新介面或者新服務是什麼。 
 5. 【強制】不能使用過時的類或方法。 
-<br><span style="color:orange">說明</span>：java.net.URLDecoder 中的方法decode(String encodeStr) 這個方法已經過時，應該使用雙參數decode(String source, String encode)。接口提供方既然明確是過時接口，那麼有義務同時提供新的接口；作爲調用方來說，有義務去考證過時方法的新實現是什麼。 
+<br><span style="color:orange">說明</span>：java.net.URLDecoder 中的方法decode(String encodeStr) 這個方法已經過時，應該使用雙參數decode(String source, String encode)。介面提供方既然明確是過時介面，那麼有義務同時提供新的介面；作爲調用方來說，有義務去考證過時方法的新實現是什麼。 
 6. 【強制】Object的equals方法容易拋空指針異常，應使用常量或確定有值的對象來調用equals。
 <br><span style="color:green">正例</span>："test".equals(object);
 <br><span style="color:red">反例</span>：object.equals("test"); 
@@ -24,14 +24,14 @@ public User getUsers(String type, Integer... ids) {...}
 <br>3） 【推薦】所有的局部變量使用基本數據類型。
 <br><span style="color:orange">說明</span>：POJO類屬性沒有初值是提醒使用者在需要使用時，必須自己顯式地進行賦值，任何NPE問題，或者入庫檢查，都由使用者來保證。
 <br><span style="color:green">正例</span>：數據庫的查詢結果可能是null，因爲自動拆箱，用基本數據類型接收有NPE風險。
-<br><span style="color:red">反例</span>：比如顯示成交總額漲跌情況，即正負x%，x爲基本數據類型，調用的RPC服務，調用不成功時，返回的是默認值，頁面顯示爲0%，這是不合理的，應該顯示成中劃線。所以包裝數據類型的null值，能夠表示額外的信息，如：遠程調用失敗，異常退出。 
-9. 【強制】定義DO/DTO/VO等POJO類時，不要設定任何屬性**默認值**。
-<br><span style="color:red">反例</span>：POJO類的gmtCreate默認值爲new Date();但是這個屬性在數據提取時並沒有置入具體值，在更新其它字段時又附帶更新了此字段，導致創建時間被修改成當前時間。 
+<br><span style="color:red">反例</span>：比如顯示成交總額漲跌情況，即正負x%，x爲基本數據類型，調用的RPC服務，調用不成功時，返回的是預設值，頁面顯示爲0%，這是不合理的，應該顯示成中劃線。所以包裝數據類型的null值，能夠表示額外的信息，如：遠程調用失敗，異常退出。 
+9. 【強制】定義DO/DTO/VO等POJO類時，不要設定任何屬性**預設值**。
+<br><span style="color:red">反例</span>：POJO類的gmtCreate預設值爲new Date();但是這個屬性在數據提取時並沒有置入具體值，在更新其它字段時又附帶更新了此字段，導致創建時間被修改成當前時間。 
 10. 【強制】序列化類新增屬性時，請不要修改serialVersionUID字段，避免反序列失敗；如果完全不兼容升級，避免反序列化混亂，那麼請修改serialVersionUID值。 
 <br><span style="color:orange">說明</span>：注意serialVersionUID不一致會拋出序列化運行時異常。 
 11. 【強制】構造方法裏面禁止加入任何業務邏輯，如果有初始化邏輯，請放在init方法中。 
 12. 【強制】POJO類必須寫function toString() { [native code] }方法。使用IDE中的工具：source> generate function toString() { [native code] }時，如果繼承了另一個POJO類，注意在前面加一下super.function toString() { [native code] }。 <br><span style="color:orange">說明</span>：在方法執行拋出異常時，可以直接調用POJO的function toString() { [native code] }()方法打印其屬性值，便於排查問題。 
-13. 【推薦】使用索引訪問用String的split方法得到的數組時，需做最後一個分隔符後有無內容的檢查，否則會有拋IndexOutOfBoundsException的風險。 
+13. 【推薦】使用索引訪問用String的split方法得到的陣列時，需做最後一個分隔符後有無內容的檢查，否則會有拋IndexOutOfBoundsException的風險。 
 <br><span style="color:orange">說明</span>：
 ```
 String str = "a,b,c,,";  
@@ -67,7 +67,7 @@ String[] ary = str.split(",");
 <br>4） 不允許運行過程中重新賦值的局部變量。
 <br>5） 避免上下文重複使用一個變量，使用final描述可以強制重新定義一個變量，方便更好地進行重構。 
 19. 【推薦】慎用Object的clone方法來拷貝對象。 
-<br><span style="color:orange">說明</span>：對象的clone方法默認是淺拷貝，若想實現深拷貝需要重寫clone方法實現屬性對象的拷貝。 
+<br><span style="color:orange">說明</span>：對象的clone方法預設是淺拷貝，若想實現深拷貝需要重寫clone方法實現屬性對象的拷貝。 
 20. 【推薦】類成員與方法訪問控制從嚴：
 <br>1） 如果不允許外部直接通過new來創建對象，那麼構造方法必須是private。
 <br>2） 工具類不允許有public或default構造方法。
